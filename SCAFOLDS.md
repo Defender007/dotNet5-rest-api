@@ -12,3 +12,13 @@ dotnet add package MongoDB.Driver
 
 <!-- run docker container for MongoDB -->
 docker run -d --rm --name mongo -p 27017:27017 -v mongodata:data/db mongo
+
+<!-- to add existing local repo to a new remote github repo -->
+git remote add origin <remote_repo_url_here>
+git branch -M main
+git push -u -f origin main
+
+<!-- to checkout a new local branch -->
+git checkout -b async-version
+
+

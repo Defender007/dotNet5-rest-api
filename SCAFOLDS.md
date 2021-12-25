@@ -29,3 +29,6 @@ dotnet user-secrets init
 <!-- to set any secret keys/value of any settings in 
 appsettings.json in an environment variable.. -->
 dotnet user-secrets set <Settings_name_here>:<Key> <value>
+
+<!-- add package for health checks-->
+dotnet add package AspNetCore.HealthChecks.MongoDB 

@@ -44,6 +44,9 @@ namespace Catalog
 
 
             services.AddSingleton<IItemsRepository, MongoDbItemsRepository>();
+            
+            // this Addcontroller overload was used so that... 
+            // "Async" suffix in Controllers' name will not be removed at runtime
             services.AddControllers(options =>
             {
                 options.SuppressAsyncSuffixInActionNames = false;

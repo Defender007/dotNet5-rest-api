@@ -13,7 +13,11 @@ dotnet add package MongoDB.Driver
 <!-- run docker container for MongoDB -->
 docker run -d --rm --name mongo -p 27017:27017 -v mongodata:/data/db mongo <!-- without -e -->
 
-docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=pass#word1 mongo <!-- with -e -->
+<!-- with -e  and custom network in Development mode-->
+docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=pass#word1  --network=net5tutorial mongo
+
+<!-- connecting REST-Api app to mongoDB with custom network in Production mode-->
+docker run -it --rm -p 8080:80 -e MongoDbSettings:Host=mongo -e MongoDbSettings:Password=pass#word1 --network=net5tutorial catalog:v1
 
 <!-- to add existing local repo to a new remote github repo -->
 git remote add origin <remote_repo_url_here>
@@ -26,9 +30,15 @@ git checkout -b async-version
 <!-- to generate secret keys... -->
 dotnet user-secrets init
 
-<!-- to set any secret keys/value of any settings in 
-appsettings.json in an environment variable.. -->
+<!-- using secret manager to set any secret keys/value of any settings in 
+appsettings.json in an Development mode... -->
 dotnet user-secrets set <Settings_name_here>:<Key> <value>
 
 <!-- add package for health checks-->
-dotnet add package AspNetCore.HealthChecks.MongoDB 
+dotnet add package AspNetCore.HealthChecks.MongoDB
+
+<!-- to build docker image with tag from current directory -->
+docker build -t catalog:v1 .
+
+<!-- to create a custom network -->
+docker network create net5tutorial

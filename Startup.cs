@@ -39,23 +39,23 @@ namespace Catalog
             BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
             BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(BsonType.String));
             var mongoDbSettings = Configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
-            
-            services.AddSingleton<IMongoClient>(serviceProvider => 
+
+            services.AddSingleton<IMongoClient>(serviceProvider =>
             {
-                
+
                 return new MongoClient(mongoDbSettings.ConnectionString);
 
             });
 
             services.AddSingleton<IItemsRepository, MongoDbItemsRepository>();
-            
+
             // this Addcontroller overload was used so that... 
             // "Async" suffix in Controllers' name will not be removed at runtime
             services.AddControllers(options =>
             {
                 options.SuppressAsyncSuffixInActionNames = false;
             });
-                
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog", Version = "v1" });
@@ -64,10 +64,10 @@ namespace Catalog
             //++ for health-checks services...
             services.AddHealthChecks()
                 .AddMongoDb(
-                mongoDbSettings.ConnectionString, 
-                name: "mongodb", 
+                mongoDbSettings.ConnectionString,
+                name: "mongodb",
                 timeout: TimeSpan.FromSeconds(3),
-                tags: new[]{ "ready"}
+                tags: new[] { "ready" }
                 );
         }
 
@@ -80,8 +80,11 @@ namespace Catalog
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalog v1"));
             }
-
-            app.UseHttpsRedirection();
+            // ++ use only in development mode...
+            if (env.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
 
             app.UseRouting();
 
@@ -94,13 +97,15 @@ namespace Catalog
                 //++ for health-checks endpoint...
                 endpoints.MapHealthChecks("/health/ready", new HealthCheckOptions
                 {
-                    Predicate = (check)=> check.Tags.Contains("ready"),
-                    ResponseWriter = async(context, report) =>
+                    Predicate = (check) => check.Tags.Contains("ready"),
+                    ResponseWriter = async (context, report) =>
                     {
                         var result = JsonSerializer.Serialize(
-                            new{
+                            new
+                            {
                                 status = report.Status.ToString(),
-                                checks = report.Entries.Select(entry => new{
+                                checks = report.Entries.Select(entry => new
+                                {
                                     name = entry.Key,
                                     status = entry.Value.Status.ToString(),
                                     exception = entry.Value.Exception != null ? entry.Value.Exception.Message : "none",
@@ -116,8 +121,9 @@ namespace Catalog
                 });
 
                 //++ for health-checks endpoint...
-                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions{
-                    Predicate = (_)=> false
+                endpoints.MapHealthChecks("/health/live", new HealthCheckOptions
+                {
+                    Predicate = (_) => false
                 });
             });
         }

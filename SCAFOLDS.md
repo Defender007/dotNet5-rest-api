@@ -42,3 +42,6 @@ docker build -t catalog:v1 .
 
 <!-- to create a custom network -->
 docker network create net5tutorial
+
+<!-- to create secrets in pods -->
+kubectl create secret generic catalog-secrets --from-literal=mongodb-password='pass#word1'

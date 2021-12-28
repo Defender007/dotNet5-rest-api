@@ -48,3 +48,6 @@ kubectl create secret generic catalog-secrets --from-literal=mongodb-password='p
 
 <!-- apply a kubernetes object from file -->
 kubectl apply -f <yaml_file_name.yaml>
+
+<!-- to scale up number of pods -->
+kubectl scale deployments/catalog-deployment --replicas=3

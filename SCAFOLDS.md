@@ -45,3 +45,6 @@ docker network create net5tutorial
 
 <!-- to create secrets in pods -->
 kubectl create secret generic catalog-secrets --from-literal=mongodb-password='pass#word1'
+
+<!-- apply a kubernetes object from file -->
+kubectl apply -f <yaml_file_name.yaml>

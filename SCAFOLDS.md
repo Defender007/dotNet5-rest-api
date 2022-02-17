@@ -51,3 +51,6 @@ kubectl apply -f <yaml_file_name.yaml>
 
 <!-- to scale up number of pods -->
 kubectl scale deployments/catalog-deployment --replicas=3
+
+<!-- delete statefulsets pods -->
+kubectl delete pods mongodb-statefulset-0 --grace-period=0 --force

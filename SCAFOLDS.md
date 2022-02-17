@@ -1,4 +1,4 @@
-dotnet new wepapi -n <whatever the Project name> -> Catalog
+dotnet new wepapi -n <whatever the Project name> e.g Catalog
 
 disable browser relaunch in ".vscode/launch.json"
 

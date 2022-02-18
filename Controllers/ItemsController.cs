@@ -23,7 +23,7 @@ namespace Catalog.Controllers
         [HttpGet]
         public IEnumerable<ItemDto> GetItems()
         {
-            var items = repository.GetItems().Select(item => item.AsDto()); ;
+            var items = repository.GetItems().Select(item => item.AsDto());
             return items;
         }
 
